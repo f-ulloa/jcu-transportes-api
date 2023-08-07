@@ -1,5 +1,13 @@
-import { Column, Entity, ManyToOne, PrimaryGeneratedColumn } from 'typeorm';
+import {
+  Column,
+  Entity,
+  ManyToMany,
+  ManyToOne,
+  OneToMany,
+  PrimaryGeneratedColumn,
+} from 'typeorm';
 import { Viaje } from '../../viajes/entities/viaje.entity';
+import { Empresa } from 'src/empresa/entities/empresa.entity';
 
 @Entity()
 export class Pasajero {
@@ -15,6 +23,9 @@ export class Pasajero {
   @Column()
   domicilio: string;
 
-  @ManyToOne(() => Viaje, (viaje) => viaje.pasajeros)
-  viaje: Viaje;
+  @ManyToOne(() => Empresa, (empresa) => empresa.viejos)
+  empresa: Empresa;
+
+  @ManyToMany(() => Viaje, (viaje) => viaje.pasajeros)
+  viajes: Viaje[];
 }

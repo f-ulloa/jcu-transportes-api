@@ -17,11 +17,14 @@ export class PasajeroService {
   }
 
   findAll() {
-    return this.pasajeroRepository.find();
+    return this.pasajeroRepository.find({ relations: { empresa: true } });
   }
 
   findOne(id: number) {
-    return this.pasajeroRepository.findOne({ where: { id } });
+    return this.pasajeroRepository.findOne({
+      where: { id },
+      relations: { empresa: true },
+    });
   }
 
   update(id: number, updatePasajeroDto: UpdatePasajeroDto) {
@@ -33,9 +36,9 @@ export class PasajeroService {
   }
 
   async preloadPasajero(pasajero: CreatePasajeroDto) {
-    const { nombre, fono } = pasajero;
+    const { nombre, fono, domicilio } = pasajero;
     const existingPasajero = await this.pasajeroRepository.findOne({
-      where: { nombre, fono },
+      where: { nombre, fono, domicilio },
     });
     if (existingPasajero) {
       return existingPasajero;

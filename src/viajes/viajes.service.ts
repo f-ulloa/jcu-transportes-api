@@ -4,27 +4,29 @@ import { UpdateViajeDto } from './dto/update-viaje.dto';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Viaje } from './entities/viaje.entity';
 import { Repository } from 'typeorm';
-import { PasajeroService } from 'src/pasajero/pasajero.service';
+import { Empresa } from 'src/empresa/entities/empresa.entity';
+import { Pasajero } from 'src/pasajero/entities/pasajero.entity';
+import { Conductor } from 'src/conductor/entities/conductor.entity';
+import { FirmarViajeDto } from './dto/firmar-viaje.dto';
 
 @Injectable()
 export class ViajesService {
   constructor(
     @InjectRepository(Viaje)
     private readonly viajeRepository: Repository<Viaje>,
-    private readonly pasajeroServise: PasajeroService,
   ) {}
 
-  async create(createViajeDto: CreateViajeDto) {
-    const pasajeros = await Promise.all(
-      createViajeDto.pasajeros.map((pasajero) =>
-        this.pasajeroServise.preloadPasajero(pasajero),
-      ),
-    );
-
+  async create(
+    createViajeDto: CreateViajeDto,
+    empresa: Empresa,
+    preLoadPasajeros: Pasajero[],
+  ) {
     const viaje = this.viajeRepository.create({
       ...createViajeDto,
-      pasajeros,
+      pasajeros: preLoadPasajeros,
+      empresa,
     });
+
     return this.viajeRepository.save(viaje);
   }
 
@@ -32,6 +34,8 @@ export class ViajesService {
     return this.viajeRepository.find({
       relations: {
         pasajeros: true,
+        conductor: true,
+        empresa: true,
       },
     });
   }
@@ -43,12 +47,19 @@ export class ViajesService {
       },
       relations: {
         pasajeros: true,
+        conductor: true,
+        empresa: true,
       },
     });
   }
 
-  update(id: number, updateViajeDto: UpdateViajeDto) {
+  update(id: number, updateViajeDto: UpdateViajeDto | FirmarViajeDto) {
     return this.viajeRepository.update({ id }, updateViajeDto);
+  }
+
+  async enroll(viaje: Viaje, conductor: Conductor) {
+    viaje.conductor = conductor;
+    return this.viajeRepository.save(viaje);
   }
 
   remove(id: number) {
