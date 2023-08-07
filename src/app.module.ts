@@ -4,9 +4,12 @@ import { ViajesModule } from './viajes/viajes.module';
 import { PasajeroModule } from './pasajero/pasajero.module';
 import { ConductorModule } from './conductor/conductor.module';
 import { EmpresaModule } from './empresa/empresa.module';
+import { EmailModule } from './email/email.module';
+import { ConfigModule } from '@nestjs/config';
 
 @Module({
   imports: [
+    ConfigModule.forRoot(),
     TypeOrmModule.forRoot({
       type: 'postgres',
       host: 'localhost',
@@ -21,6 +24,7 @@ import { EmpresaModule } from './empresa/empresa.module';
     PasajeroModule,
     ConductorModule,
     EmpresaModule,
+    EmailModule,
   ],
 })
 export class AppModule {}
