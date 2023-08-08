@@ -7,14 +7,16 @@ import { PasajeroModule } from 'src/pasajero/pasajero.module';
 import { EmpresaModule } from 'src/empresa/empresa.module';
 import { ConductorModule } from 'src/conductor/conductor.module';
 import { EmailModule } from 'src/email/email.module';
+import { WhatsappModule } from 'src/whatsapp/whatsapp.module';
 
 @Module({
   imports: [
+    TypeOrmModule.forFeature([Viaje]),
     PasajeroModule,
     ConductorModule,
     EmpresaModule,
     EmailModule,
-    TypeOrmModule.forFeature([Viaje]),
+    WhatsappModule,
   ],
   controllers: [ViajesController],
   providers: [ViajesService],

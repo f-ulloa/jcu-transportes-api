@@ -9,6 +9,7 @@ import { Pasajero } from 'src/pasajero/entities/pasajero.entity';
 import { Conductor } from 'src/conductor/entities/conductor.entity';
 import { FirmarViajeDto } from './dto/firmar-viaje.dto';
 import { EmailService } from 'src/email/email.service';
+import { WhatsappService } from 'src/whatsapp/whatsapp.service';
 
 @Injectable()
 export class ViajesService {
@@ -16,6 +17,7 @@ export class ViajesService {
     @InjectRepository(Viaje)
     private readonly viajeRepository: Repository<Viaje>,
     private readonly emailService: EmailService,
+    private readonly whatsappServie: WhatsappService,
   ) {}
 
   async create(
@@ -63,7 +65,8 @@ export class ViajesService {
     viaje.conductor = conductor;
     viaje.estado_viaje = 'Aprobado';
     const subject = 'Datos del viaje';
-    this.emailService.sendMail(viaje.correo_remitente, subject, viaje);
+    //this.emailService.sendMail(viaje.correo_remitente, subject, viaje);
+    this.whatsappServie.sendMessage('+56948854545', viaje);
     return this.viajeRepository.save(viaje);
   }
 

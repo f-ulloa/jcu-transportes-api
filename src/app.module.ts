@@ -6,6 +6,8 @@ import { ConductorModule } from './conductor/conductor.module';
 import { EmpresaModule } from './empresa/empresa.module';
 import { EmailModule } from './email/email.module';
 import { ConfigModule } from '@nestjs/config';
+import { WhatsappService } from './whatsapp/whatsapp.service';
+import { WhatsappModule } from './whatsapp/whatsapp.module';
 
 @Module({
   imports: [
@@ -25,6 +27,8 @@ import { ConfigModule } from '@nestjs/config';
     ConductorModule,
     EmpresaModule,
     EmailModule,
+    WhatsappModule,
   ],
+  providers: [WhatsappService],
 })
 export class AppModule {}
